@@ -14,11 +14,11 @@ export const getFoodItems = tryCatch(async (req: Request, res: Response) => {
 export const createFoodItem = tryCatch(async (req: Request, res: Response) => {
   const company: IFoodItem = req.body;
   const foodItemModel = new FoodItemModel(company);
-  const savedCompany = await foodItemModel.save();
+  const savedFoodItem = await foodItemModel.save();
   const response: StandardResponse<string> = {
     statusCode: success,
-    msg: "company created successfully",
-    data: savedCompany._id.toString()
+    msg: "Food Item created successfully",
+    data: savedFoodItem._id.toString()
   }
   res.status(success).send(response);
 });

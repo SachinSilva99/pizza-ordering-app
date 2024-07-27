@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import tryCatch from "../utils/TryCatch";
+import {tryCatch} from "../utils/TryCatch";
 import {badRequest, success} from "../utils/constants";
 import {StandardResponse} from "../dto/StandardResponse";
 import {CartItemModel} from "../model/cart-item.model";

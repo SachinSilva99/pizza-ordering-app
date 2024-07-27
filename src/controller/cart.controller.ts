@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {FoodItemModel} from "../model/food-item.model";
-import tryCatch from "../utils/TryCatch";
+import {tryCatch} from "../utils/TryCatch";
 import {NotFoundError} from "../types/error/NotFoundError";
 import {StandardResponse} from "../dto/StandardResponse";
 import {success} from "../utils/constants";

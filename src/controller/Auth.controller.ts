@@ -1,6 +1,6 @@
 import express, {Request, Response} from "express";
 import UserModel from "../model/User.model";
-import tryCatch from "../utils/TryCatch";
+import {tryCatch} from "../utils/TryCatch";
 import {StandardResponse} from "../dto/StandardResponse";
 import bcrypt from 'bcrypt';
 import process from "process";

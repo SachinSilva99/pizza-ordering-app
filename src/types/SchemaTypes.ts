@@ -1,4 +1,5 @@
 import {Schema} from "mongoose";
+import {ItemStatus} from "../utils/constants";
 
 export interface IFoodItem extends Document {
   name: string,
@@ -7,6 +8,8 @@ export interface IFoodItem extends Document {
   price: number,
   description: string,
   imageUrl: string
+  qty: number,
+  itemStatus: ItemStatus,
 }
 
 export interface IUser extends Document {
@@ -16,6 +19,7 @@ export interface IUser extends Document {
   address: string,
   image: string,
 }
+
 export interface CartItem extends Document {
   user: Schema.Types.ObjectId;
   items: {

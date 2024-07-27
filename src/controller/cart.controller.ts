@@ -7,22 +7,67 @@ import {StandardResponse} from "../dto/StandardResponse";
 import {success} from "../utils/constants";
 
 
-export const addToCart = tryCatch(async (req: Request, res: Response) => {
+export const addToCart = tryCatch(async (req: Request, res: Response) => {// @ts-ignore
+  const userId = res.tokenData.user._id; // logged in userId
+  const { foodItemId, quantity } = req.body;
 
-  const {userId, foodItemId, quantity} = req.body;
   const foodItem = await FoodItem.findById(foodItemId);
   if (!foodItem) {
     throw new NotFoundError("Food item not found");
   }
 
-  let cart = await CartItem.findOne({user: userId});
+  let cart = await CartItem.findOne({ user: userId });
   if (!cart) {
-    cart = new CartItem({user: userId, items: [], total: 0});
+    cart = new CartItem({ user: userId, items: [], total: 0 });
   }
-  cart.items.push({foodItem: foodItemId, quantity});
+
+  const existingItem = cart.items.find(item => item.foodItem.toString() === foodItemId);
+  if (existingItem) {
+    existingItem.quantity += quantity;
+  } else {
+    cart.items.push({ foodItem: foodItemId, quantity });
+  }
   cart.total += foodItem.price * quantity;
   await cart.save();
-  const response: StandardResponse<string> = {statusCode: success, msg: "Item added to cart successfully!"};
+
+  const response: StandardResponse<string> = { statusCode: success, msg: "Item added to cart successfully!" };
+  res.status(success).send(response);
+});
+export const removeFromCart = tryCatch(async (req: Request, res: Response) => {
+  // @ts-ignore
+  const userId = res.tokenData.user._id; // logged in userId
+  const { foodItemId, quantity } = req.body;
+
+  const foodItem = await FoodItem.findById(foodItemId);
+  if (!foodItem) {
+    throw new NotFoundError("Food item not found");
+  }
+
+  let cart = await CartItem.findOne({ user: userId });
+  if (!cart) {
+    throw new NotFoundError("Cart is empty!");
+  }
+
+  const existingItem = cart.items.find(item => item.foodItem.toString() === foodItemId);
+  if (!existingItem) {
+    throw new NotFoundError("Item not found in cart");
+  }
+
+  if (existingItem.quantity < quantity) {
+    throw new Error("Quantity to remove exceeds quantity in cart");
+  }
+
+  existingItem.quantity -= quantity;
+  if (existingItem.quantity === 0) {
+    cart.items.pull(existingItem._id);
+  }
+
+
+  cart.total -= foodItem.price * quantity;
+  if (cart.total < 0) cart.total = 0;
+  await cart.save();
+
+  const response: StandardResponse<string> = { statusCode: success, msg: "Item removed from cart successfully!" };
   res.status(success).send(response);
 });
 

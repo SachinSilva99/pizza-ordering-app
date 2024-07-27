@@ -66,7 +66,7 @@ export const removeFromCart = tryCatch(async (req: Request, res: Response) => {
 
   existingItem.quantity -= quantity;
   if (existingItem.quantity === 0) {
-    cart.items = cart.items.filter(item => item.foodItem.toString() !== foodItemId);
+    // cart.items = cart.items.filter(item => item.foodItem.toString() !== foodItemId);
   }
 
 
@@ -81,11 +81,11 @@ export const removeFromCart = tryCatch(async (req: Request, res: Response) => {
 export const getCartItems = tryCatch(async (req: Request, res: Response) => {
   // @ts-ignore
   const userId = res.tokenData.user._id; // logged in userId
-  let cart = await CartItemModel.findOne({user: userId});
+  let cart = await CartItemModel.findOne({user: userId}).populate({path: 'items.foodItem'});
   if (!cart) {
     throw new NotFoundError("Cart is empty!");
   }
-  const response: StandardResponse<CartItem> = {
+  const response: StandardResponse<any> = {
     statusCode: success,
     msg: "Cart items",
     data: cart

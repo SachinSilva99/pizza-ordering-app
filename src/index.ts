@@ -8,6 +8,7 @@ import cors from 'cors';
 import cartRoute from "./routes/cart.route";
 import foodItemRoute from "./routes/food-item.route";
 import orderRoute from "./routes/order.route";
+import adminRoute from "./routes/admin.route";
 
 env.config();
 
@@ -25,6 +26,7 @@ app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/cart", cartRoute);
 app.use("/api/v1/food-item", foodItemRoute);
 app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/admin", adminRoute);
 app.use(errorHandler);
 app.listen(process.env.PORT, () => {
   console.log(`[server]: Server is running at http://localhost:${process.env.PORT}`);

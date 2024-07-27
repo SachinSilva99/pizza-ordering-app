@@ -9,3 +9,4 @@ export enum UserStatus{
 }
 export const saltRounds = 10;
 export const success = 200;
+export const badRequest = 400;

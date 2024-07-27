@@ -8,8 +8,9 @@ const foodItemSchema = new Schema({
   price: {type: Number, required: true},
   description: {type: String},
   imageUrl: {type: String},
+  qty:{type: Number, required: true},
   status: {type: String, enum: ItemStatus},
 });
 
-const FoodItem = model('FoodItem', foodItemSchema);
-export default FoodItem;
+export const FoodItemModel = model('FoodItem', foodItemSchema);
+

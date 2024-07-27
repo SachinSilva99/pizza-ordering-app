@@ -1,14 +1,13 @@
 import {Request, Response} from 'express';
-import FoodItem from "../model/food-item.model";
 import tryCatch from "../utils/TryCatch";
 import {IFoodItem} from "../types/SchemaTypes";
-import FoodItemModel from "../model/food-item.model";
+import {FoodItemModel} from "../model/food-item.model";
 import {StandardResponse} from "../dto/StandardResponse";
 import {success} from "../utils/constants";
 
 
 export const getFoodItems = tryCatch(async (req: Request, res: Response) => {
-  const foodItems = await FoodItem.find();
+  const foodItems = await FoodItemModel.find();
   res.json(foodItems);
 });
 export const createFoodItem = tryCatch(async (req: Request, res: Response) => {

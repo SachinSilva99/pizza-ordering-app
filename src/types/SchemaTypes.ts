@@ -16,7 +16,14 @@ export interface IUser extends Document {
   address: string,
   image: string,
 }
-
+export interface CartItem extends Document {
+  user: Schema.Types.ObjectId;
+  items: {
+    foodItem: Schema.Types.ObjectId;
+    quantity: number;
+  }[];
+  total: number;
+}
 
 
 

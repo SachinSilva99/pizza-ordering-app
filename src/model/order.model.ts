@@ -11,5 +11,5 @@ const orderSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const Order = model('Order', orderSchema);
-export default Order;
+export const OrderModel = model('Order', orderSchema);
+

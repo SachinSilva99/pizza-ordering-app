@@ -2,11 +2,18 @@ import {StandardResponse} from "../dto/StandardResponse";
 import {NotFoundError} from "../types/error/NotFoundError";
 import {UnAuthorizedError} from "../types/error/UnAuthorizedError";
 import {Response} from "express";
+import {CommonError} from "../types/error/CommonError";
 
 const errorHandler = (err: any, req: any, res: Response, next:any) => {
   if (err instanceof NotFoundError) {
     return res.status(err.statusCode || 404).send({
       statusCode: err.statusCode || 404,
+      msg: err.message,
+    });
+  }
+  if (err instanceof CommonError) {
+    return res.status(err.statusCode || 400).send({
+      statusCode: err.statusCode || 400,
       msg: err.message,
     });
   }

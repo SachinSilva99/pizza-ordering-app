@@ -4,7 +4,8 @@ import {tryCatch} from "../utils/TryCatch";
 import {badRequest, success} from "../utils/constants";
 import {StandardResponse} from "../dto/StandardResponse";
 import {CartItemModel} from "../model/cart-item.model";
-import {OrderModel} from "../model/order.model";
+import {Order, OrderModel} from "../model/order.model";
+
 
 
 export const createOrder = tryCatch(async (req: Request, res: Response) => {
@@ -22,6 +23,17 @@ export const createOrder = tryCatch(async (req: Request, res: Response) => {
   await order.save();
   await cart.deleteOne({user: userId});
   const response: StandardResponse<string> = {statusCode: success, msg: "Order placed successfully!"};
+  res.status(success).send(response);
+});
+
+export const getOrders = tryCatch(async (req: Request, res: Response) => {
+  // @ts-ignore
+  const userId = res.tokenData.user._id;//logged in userId
+  const orders = await OrderModel.find({user: userId}).populate('items.foodItem');
+
+  if (!orders) return res.status(badRequest).json({error: 'Cart is empty'});
+
+  const response: StandardResponse<Order[]> = {statusCode: success, msg: "Orders", data:orders};
   res.status(success).send(response);
 });
 

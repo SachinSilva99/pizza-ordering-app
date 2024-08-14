@@ -1,10 +1,11 @@
 import express from "express";
 import {createFoodItem, deleteFoodItem, updateFoodItem} from "../controller/admin.controller";
 import {adminVerify} from "../middlewares/admin-verify";
+import {verifyToken} from "../middlewares/VerifyToken";
 
 const router = express.Router();
-router.post("/food/add",adminVerify, createFoodItem);
-router.patch("/food/edit/:id",adminVerify, updateFoodItem);
+router.post("/food/add",verifyToken, createFoodItem);
+router.patch("/food/edit/:id",verifyToken, updateFoodItem);
 
 
 

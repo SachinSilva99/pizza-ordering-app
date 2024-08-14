@@ -4,6 +4,6 @@ import {addToCart, getCartItems, removeFromCart} from "../controller/cart.contro
 
 const router = express.Router();
 router.post("/add",verifyToken, addToCart);
-router.delete("/remove",verifyToken, removeFromCart);
+router.post("/remove",verifyToken, removeFromCart);
 router.get("/",verifyToken, getCartItems);
 export default router;

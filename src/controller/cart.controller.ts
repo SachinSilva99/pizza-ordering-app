@@ -5,8 +5,8 @@ import {NotFoundError} from "../types/error/NotFoundError";
 import {StandardResponse} from "../dto/StandardResponse";
 import {success} from "../utils/constants";
 import {CartItemModel} from "../model/cart-item.model";
-import {CartItem} from "../types/SchemaTypes";
 import {CommonError} from "../types/error/CommonError";
+import {CartItem} from "../types/SchemaTypes";
 
 
 export const addToCart = tryCatch(async (req: Request, res: Response) => {// @ts-ignore
@@ -35,7 +35,8 @@ export const addToCart = tryCatch(async (req: Request, res: Response) => {// @ts
   }
   cart.total += foodItem.price * quantity;
   await cart.save();
-
+  foodItem.qty -= quantity;
+  await foodItem.save();
   const response: StandardResponse<string> = {statusCode: success, msg: "Item added to cart successfully!"};
   res.status(success).send(response);
 });
@@ -66,14 +67,15 @@ export const removeFromCart = tryCatch(async (req: Request, res: Response) => {
 
   existingItem.quantity -= quantity;
   if (existingItem.quantity === 0) {
-    // cart.items = cart.items.filter(item => item.foodItem.toString() !== foodItemId);
+    cart.items = cart.items.filter(item => item.foodItem.toString() !== foodItemId);
   }
 
 
   cart.total -= foodItem.price * quantity;
   if (cart.total < 0) cart.total = 0;
   await cart.save();
-
+  foodItem.qty += quantity;
+  await foodItem.save();
   const response: StandardResponse<string> = {statusCode: success, msg: "Item removed from cart successfully!"};
   res.status(success).send(response);
 });
@@ -83,9 +85,9 @@ export const getCartItems = tryCatch(async (req: Request, res: Response) => {
   const userId = res.tokenData.user._id; // logged in userId
   let cart = await CartItemModel.findOne({user: userId}).populate({path: 'items.foodItem'});
   if (!cart) {
-    throw new NotFoundError("Cart is empty!");
+    throw new CommonError("Cart is empty!");
   }
-  const response: StandardResponse<any> = {
+  const response: StandardResponse<CartItem> = {
     statusCode: success,
     msg: "Cart items",
     data: cart
